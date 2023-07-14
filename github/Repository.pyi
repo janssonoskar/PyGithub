@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Any, Dict, Iterable, List, Optional, Union, overload
+from typing import Any, Dict, Iterable, Literal, List, Optional, Union, overload
 
 from github.Artifact import Artifact
 from github.AuthenticatedUser import AuthenticatedUser
@@ -122,7 +122,12 @@ class Repository(CompletableGithubObject):
     def contents_url(self) -> str: ...
     @property
     def contributors_url(self) -> str: ...
-    def create_autolink(self, key_prefix: str, url_template: str) -> Autolink: ...
+    def create_autolink(
+        self,
+        key_prefix: str,
+        url_template: str,
+        match_: Union[Literal["alphanumeric"], Literal["numeric"]]
+    ) -> Autolink: ...
     def create_check_run(
         self,
         name: str,

@@ -19,6 +19,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from typing import Union, Literal
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -28,6 +29,7 @@ class Autolink(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._key_prefix: Attribute[str] = NotSet
         self._url_template: Attribute[str] = NotSet
+        self._match: Attribute[Union[Literal["alphanumeric"], Literal["numeric"]]] = NotSet
 
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
@@ -44,6 +46,10 @@ class Autolink(NonCompletableGithubObject):
     def url_template(self) -> str:
         return self._url_template.value
 
+    @property
+    def match(self) -> str:
+        return self._match.value
+    
     def _useAttributes(self, attributes) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])

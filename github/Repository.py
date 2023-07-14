@@ -129,6 +129,7 @@ import typing
 import urllib.parse
 from base64 import b64encode
 from datetime import date, datetime, timezone
+from typing import Union, Literal
 
 from deprecated import deprecated
 
@@ -976,17 +977,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}")
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
-    def create_autolink(self, key_prefix, url_template):
+    def create_autolink(self, key_prefix, url_template, match_="alphanumeric"):
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
         :param url_template: string
+        :param match_type: Union[Literal["alphanumeric"], Literal["numeric"]]
         :rtype: :class:`github.Autolink.Autolink`
         """
+        def is_alphanumeric(x):
+            return int(x == "alphanumeric")
+
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
 
-        post_parameters = {"key_prefix": key_prefix, "url_template": url_template}
+        post_parameters = {"key_prefix": key_prefix, "url_template": url_template, "is_alphanumeric": is_alphanumeric(match_)}
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/autolinks", input=post_parameters)
         return github.Autolink.Autolink(self._requester, headers, data, completed=True)
 
